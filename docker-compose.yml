@@ -1,0 +1,14 @@
+version: '3.9'
+
+services:
+  database:
+    image: ankane/pgvector:latest
+    container_name: db_postgres
+    hostname: db_postgres
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+      PGSSLMODE: disable
