@@ -7,7 +7,6 @@ install:
 	pyenv install 3.11.4 --skip-existing
 	pyenv local 3.11.4
 	curl -sSL https://install.python-poetry.org | python3 - --version 1.7.1
-	poetry config http-basic.kavak ${ARTIFACTORY_USERNAME} ${ARTIFACTORY_ACCESS_TOKEN}
 	poetry install --no-root --sync
 	poetry self add poetry-dotenv-plugin
 
