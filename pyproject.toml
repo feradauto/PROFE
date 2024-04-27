@@ -44,12 +44,6 @@ build-backend = "poetry.core.masonry.api"
 
 
 [[tool.poetry.source]]
-name = "kavak"
-url = "https://kavak.jfrog.io/artifactory/api/pypi/pypi/simple"
-priority = "default"
-
-
-[[tool.poetry.source]]
 name = "pipy"
 url = "https://pypi.python.org/simple"
 priority = "primary"
