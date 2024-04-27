@@ -21,23 +21,23 @@ router = APIRouter()
 async def message(request: Request):
     form_data = await request.form()
     logger.info(form_data)
-
-    if "image" in form_data['MediaContentType0']:
-        extension = "jpg"
-    elif "audio" in form_data['MediaContentType0']:
-        extension = "mp3"
-    elif "video" in form_data['MediaContentType0']:
-        extension = "mp4"
-    filename = form_data['SmsMessageSid'] + '.' +extension
-
     credentials = f"{ACCOUNT_SID}:{AUTH_TOKEN}"
     encoded_credentials = base64.b64encode(credentials.encode('utf-8')).decode('utf-8')
     headers = {
         'Authorization': f'Basic {encoded_credentials}'
     }
 
-    with open( filename, 'wb') as f:
-        response = requests.get(form_data['MediaUrl0'],headers=headers,stream=True)
-        response.raise_for_status()
-        f.write(response.content)
+    if form_data['NumMedia'] != '0':
+        if "image" in form_data['MediaContentType0']:
+            extension = "jpg"
+        elif "audio" in form_data['MediaContentType0']:
+            extension = "mp3"
+        elif "video" in form_data['MediaContentType0']:
+            extension = "mp4"
+        filename = form_data['SmsMessageSid'] + '.' +extension
+        
+        with open( filename, 'wb') as f:
+            response = requests.get(form_data['MediaUrl0'],headers=headers,stream=True)
+            response.raise_for_status()
+            f.write(response.content)
 
