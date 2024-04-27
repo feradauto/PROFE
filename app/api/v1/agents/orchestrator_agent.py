@@ -59,7 +59,7 @@ class OrchestratorAgent:
                                           agent_kwargs={'prefix':PREFIX, 'suffix':SUFFIX, 'format_instructions':FORMAT_INSTRUCTIONS}, 
                                           verbose = True, 
                                           handle_parsing_errors = True, 
-                                          max_iterations = 2,
+                                          max_iterations = 3,
                                           early_stopping_method="generate")
         
         res=agent_executor.invoke({"input":message, "chat_history":stored_chat},{"callbacks":[self.custom_callback_handler]})
