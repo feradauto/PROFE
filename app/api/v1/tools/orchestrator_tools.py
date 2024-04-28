@@ -1,40 +1,48 @@
 from langchain.tools import BaseTool
 from langchain.callbacks.manager import CallbackManagerForToolRun
+from loguru import logger
 from typing import Any, Optional
+from app.api.v1.agents.enrichment_agent import EnrichmentAgent
 
-
-class WizardAgent(BaseTool):
+class WizardAgentTool(BaseTool):
     name = "quiz_wizard"
     description = """Helps you creating a quiz"""
+    whatsapp=""
 
     def _run(
         self, query: dict, run_manager: Optional[CallbackManagerForToolRun] = None
     ) -> str:
         """Use the tool."""
-        print("Query: ", query)
-        res="Your quiz is now available on https://www.quiz.com"
+        debug_str = f"Running Agent with query: {query}"
+        logger.debug(debug_str)
+        res="Tool not available at the moment"
         return res
 
-class EnrichmentAgent(BaseTool):
+class EnrichmentAgentTool(BaseTool):
     name = "enrichment"
-    description = """Helps you enriching your study documents with information on the internet"""
+    description = """Helps you creating study collections and enriching your study documents with information on the internet"""
+    whatsapp=""
 
     def _run(
         self, query: dict, run_manager: Optional[CallbackManagerForToolRun] = None
     ) -> str:
         """Use the tool."""
-        print("Query: ", query)
-        res="Your information has been enriched"
+        enrichment_agent = EnrichmentAgent(self.whatsapp)
+        debug_str = f"Running EnrichmentAgentTool with query: {query}"
+        logger.debug(debug_str)
+        res = enrichment_agent.run(query)
         return res
 
-class StudyAgent(BaseTool):
+class StudyAgentTool(BaseTool):
     name = "study"
     description = """Helps you studying a quiz"""
+    whatsapp=""
 
     def _run(
         self, query: dict, run_manager: Optional[CallbackManagerForToolRun] = None
     ) -> str:
         """Use the tool."""
-        print("Query: ", query)
-        res="Your quiz is now available on https://www.quiz.com"
+        debug_str = f"Running Agent with query: {query}"
+        logger.debug(debug_str)
+        res="Tool not available at the moment"
         return res

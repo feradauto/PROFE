@@ -10,6 +10,7 @@ from twilio.rest import Client
 from twilio.twiml.messaging_response import MessagingResponse
 from dotenv import load_dotenv
 from app.api.v1.agents.orchestrator_agent import OrchestratorAgent
+from app.api.v1.helpers.db_manipulation import write_message_to_db
 load_dotenv()
 
 ACCOUNT_SID=os.getenv("TWILIO_ACCOUNT_SID", "")
@@ -27,6 +28,8 @@ async def message(request: Request):
     headers = {
         'Authorization': f'Basic {encoded_credentials}'
     }
+
+    write_message_to_db(form_data, "student")
 
     if 'NumMedia' in form_data and form_data['NumMedia'] != '0':
         if "image" in form_data['MediaContentType0']:
@@ -47,6 +50,7 @@ async def message(request: Request):
     orchestrator=OrchestratorAgent(whatsapp=whatsapp)
     answer=orchestrator.run(message)
 
+    write_message_to_db({'From':whatsapp, 'Body':answer}, "teacher")
 
     logger.info(answer)
     return answer

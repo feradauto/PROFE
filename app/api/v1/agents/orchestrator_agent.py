@@ -4,8 +4,10 @@ from app.api.v1.helpers.llm_callback import CustomCallbackHandler
 from langchain import hub
 import os 
 from loguru import logger
-from app.api.v1.tools.orchestrator_tools import WizardAgent, EnrichmentAgent, StudyAgent
+from app.api.v1.tools.orchestrator_tools import WizardAgentTool, EnrichmentAgentTool, StudyAgentTool
 from app.api.v1.helpers.messages import format_chat_history
+from app.api.v1.helpers.db_manipulation import read_message_from_db
+
 PREFIX = f"""
 You are a helpful teacher, expert in every topic. Your goal is to help students learning the topic of their choice.
 You have access to the following tools:"""
@@ -39,15 +41,15 @@ class OrchestratorAgent:
         self.custom_callback_handler = CustomCallbackHandler()
 
     def get_conversation(self, whatsapp):
-        chat_history=[{'role':'Human','message':'Hi, I am John'},
-                        {'role':'Teacher','message':'Hi John!'}]
+        chat_history = read_message_from_db(whatsapp)
         chat = format_chat_history(chat_history)
         return chat
 
     def get_tools(self):
-        enrichment = EnrichmentAgent()
-        wizard = WizardAgent()
-        study = StudyAgent()
+        enrichment = EnrichmentAgentTool()
+        enrichment.whatsapp=self.whatsapp
+        wizard = WizardAgentTool()
+        study = StudyAgentTool()
         tools = [enrichment, wizard, study]
         return tools
 
@@ -59,7 +61,7 @@ class OrchestratorAgent:
                                           agent_kwargs={'prefix':PREFIX, 'suffix':SUFFIX, 'format_instructions':FORMAT_INSTRUCTIONS}, 
                                           verbose = True, 
                                           handle_parsing_errors = True, 
-                                          max_iterations = 3,
+                                          max_iterations = 2,
                                           early_stopping_method="generate")
         
         res=agent_executor.invoke({"input":message, "chat_history":stored_chat},{"callbacks":[self.custom_callback_handler]})
