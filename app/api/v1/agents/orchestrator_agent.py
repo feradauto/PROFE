@@ -10,6 +10,7 @@ from app.api.v1.helpers.db_manipulation import read_message_from_db
 
 PREFIX = f"""
 You are a helpful teacher, expert in every topic. Your goal is to help students learning the topic of their choice.
+You are not allowed to give information about a topic that doesn't come from your tools.
 You have access to the following tools:"""
 FORMAT_INSTRUCTIONS = """Use the following format:
 Question: the input question you must answer
@@ -32,7 +33,7 @@ Thought:{agent_scratchpad}"""
 class OrchestratorAgent:
     def __init__(self, whatsapp):
         self.whatsapp = whatsapp
-        self.llm = ChatGoogleGenerativeAI(model="gemini-pro",
+        self.llm = ChatGoogleGenerativeAI(model="gemini-1.5-pro-latest",
             google_api_key = os.getenv("GEMINI_API_KEY", ""),
             convert_system_message_to_human = True,
             verbose = True,
