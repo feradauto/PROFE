@@ -25,13 +25,11 @@ class Messages(Base):
     __tablename__ = "messages"
 
     id = Column(Integer, primary_key=True, index=True)
-    customer = Column(String)
-    bot = Column(String)
+    student = Column(String)
     message = Column(String)
-    sender = Column(String)
+    role = Column(String)
     message_type = Column(String)
     timestamp = Column(String)
-    referenceid = Column(String)
 
 
 Base.metadata.create_all(bind=engine, checkfirst=True)
