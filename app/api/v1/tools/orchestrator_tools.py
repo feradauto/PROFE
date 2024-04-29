@@ -3,6 +3,7 @@ from langchain.callbacks.manager import CallbackManagerForToolRun
 from loguru import logger
 from typing import Any, Optional
 from app.api.v1.agents.enrichment_agent import EnrichmentAgent
+from app.api.v1.helpers.vision import ImageInterpreter as II
 
 class WizardAgentTool(BaseTool):
     name = "quiz_wizard"
@@ -46,3 +47,25 @@ class StudyAgentTool(BaseTool):
         logger.debug(debug_str)
         res="Tool not available at the moment"
         return res
+
+
+class ImageInterpreter(BaseTool):
+    name = "image_interpreter"
+    description = """usuful when you need to answer questions about an image. It receives a JSON with the keys 'image_url' and 'query'"""
+    whatsapp = ""
+
+    def _run(
+        self, query: dict, run_manager: Optional[CallbackManagerForToolRun] = None
+    ) -> str:
+        """Use the tool."""
+        print("Query: ", query)
+        ## scheck if it is dict
+        if type(query) is not dict:
+            query_dict = eval(query)
+        else:
+            query_dict = query
+
+        it = II()
+        result = it.query_image(query_dict["image_url"], query_dict["query"])
+
+        return result

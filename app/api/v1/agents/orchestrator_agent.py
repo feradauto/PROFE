@@ -4,7 +4,12 @@ from app.api.v1.helpers.llm_callback import CustomCallbackHandler
 from langchain import hub
 import os 
 from loguru import logger
-from app.api.v1.tools.orchestrator_tools import WizardAgentTool, EnrichmentAgentTool, StudyAgentTool
+from app.api.v1.tools.orchestrator_tools import (
+    WizardAgentTool,
+    EnrichmentAgentTool,
+    StudyAgentTool,
+    ImageInterpreter,
+)
 from app.api.v1.helpers.messages import format_chat_history
 from app.api.v1.helpers.db_manipulation import read_message_from_db
 
@@ -28,7 +33,6 @@ Question: {input}
 Thought:{agent_scratchpad}"""
 
 
-
 ## Class that represents the Orchestrator Agent with an init method that initializes it and a run method to run it
 class OrchestratorAgent:
     def __init__(self, whatsapp):
@@ -48,10 +52,11 @@ class OrchestratorAgent:
 
     def get_tools(self):
         enrichment = EnrichmentAgentTool()
-        enrichment.whatsapp=self.whatsapp
+        enrichment.whatsapp = self.whatsapp
         wizard = WizardAgentTool()
         study = StudyAgentTool()
-        tools = [enrichment, wizard, study]
+        images = ImageInterpreter()
+        tools = [enrichment, wizard, study, images]
         return tools
 
     def run(self, message):
@@ -64,7 +69,7 @@ class OrchestratorAgent:
                                           handle_parsing_errors = True, 
                                           max_iterations = 2,
                                           early_stopping_method="generate")
-        
+
         res=agent_executor.invoke({"input":message, "chat_history":stored_chat},{"callbacks":[self.custom_callback_handler]})
 
         logger.info(res)
