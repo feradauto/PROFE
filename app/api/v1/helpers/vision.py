@@ -1,4 +1,3 @@
-from dotenv import load_dotenv
 import google.generativeai as genai
 from io import BytesIO
 from pdf2image import convert_from_path
@@ -61,4 +60,34 @@ class ImageInterpreter():
             img = image
         response = self.model.generate_content([query, img])
         return response.text
+    
+class PDFInterpreter():
+    def __init__(self, api_key=api_key, model="gemini-pro-vision"):
+        self.vi = ImageInterpreter(api_key=api_key, model=model)
+
+    
+    @classmethod
+    def save_pdf_in_tmp(self, pdf_url):
+        response = requests.get(pdf_url)
+        if response.status_code == 200:
+            with open('/tmp/pdf.pdf', 'wb') as f:
+                f.write(response.content)
+            return True
+        else:
+            print('Error downloading PDF:', response.status_code)
+            return False
+
+    @classmethod
+    def convert_pdf_to_images(cls, pdf_path):
+        # verify if pdf_path is an url
+        if pdf_path.startswith("http"):
+            if not cls.save_pdf_in_tmp(pdf_path):
+                return None
+            pdf_path = '/tmp/pdf.pdf'
+        try:
+            images = convert_from_path(pdf_path)
+            return images
+        except Exception as e:
+            print('Error converting PDF to images:', e)
+            return None
     
