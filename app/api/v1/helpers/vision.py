@@ -1,3 +1,4 @@
+import base64
 import google.generativeai as genai
 from io import BytesIO
 from pdf2image import convert_from_path
@@ -5,8 +6,16 @@ from PIL import Image
 import os
 import requests
 
+ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID", "")
+AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN", "")
+
 api_key = os.getenv("GEMINI_API_KEY", "")
 genai.configure(api_key=api_key)
+
+
+credentials = f"{ACCOUNT_SID}:{AUTH_TOKEN}"
+encoded_credentials = base64.b64encode(credentials.encode("utf-8")).decode("utf-8")
+headers = {"Authorization": f"Basic {encoded_credentials}"}
 
 class ImageInterpreter():
     def __init__(self, api_key=api_key, model="gemini-pro-vision"):
@@ -16,7 +25,7 @@ class ImageInterpreter():
     @classmethod
     def load_image_from_url(cls, url):
         try:       
-            response = requests.get(url)
+            response = requests.get(url, headers=headers, stream=True)
             if response.status_code == 200:
                 image = Image.open(BytesIO(response.content))
                 return image
@@ -26,7 +35,7 @@ class ImageInterpreter():
         except Exception as e:
             print('Error loading the image:', e)
             return None
-        
+
     @classmethod
     def load_image_from_path(cls, path):
         try:
@@ -35,7 +44,7 @@ class ImageInterpreter():
         except Exception as e:
             print('Error loading the image:', e)
             return None
-        
+
     @classmethod
     def load_image(cls, image_path):
         if image_path.startswith("http"):
@@ -43,14 +52,14 @@ class ImageInterpreter():
         else:
             img = cls.load_image_from_path(image_path)
         return img
-        
+
     @classmethod
     def show_image(cls, image_path, size_prop=0.5):        
         img = cls.load_image(image_path)
         width = int(img.width * size_prop)
         height = int(img.height * size_prop)
         return img.resize((width, height))
-        
+
     def query_image(self, image, query):
         # verify if image is an string
         if isinstance(image, str):
@@ -60,7 +69,7 @@ class ImageInterpreter():
             img = image
         response = self.model.generate_content([query, img])
         return response.text
-    
+
 class PDFInterpreter():
     def __init__(self, api_key=api_key, model="gemini-pro-vision"):
         self.vi = ImageInterpreter(api_key=api_key, model=model)
@@ -90,4 +99,3 @@ class PDFInterpreter():
         except Exception as e:
             print('Error converting PDF to images:', e)
             return None
-    
