@@ -1,20 +1,14 @@
-from fastapi import APIRouter, Request, Form
+from fastapi import APIRouter, Request
 from loguru import logger
 import requests
 
-import os
-import mimetypes
 import requests
-import base64
-from twilio.rest import Client
-from twilio.twiml.messaging_response import MessagingResponse
 from dotenv import load_dotenv
 from app.api.v1.agents.orchestrator_agent import OrchestratorAgent
 from app.api.v1.helpers.db_manipulation import write_message_to_db
-load_dotenv()
+from app.api.v1.twilio.whats import send_message
 
-ACCOUNT_SID=os.getenv("TWILIO_ACCOUNT_SID", "")
-AUTH_TOKEN=os.getenv("TWILIO_AUTH_TOKEN", "")
+load_dotenv()
 
 router = APIRouter()
 
@@ -22,16 +16,11 @@ router = APIRouter()
 @router.post("/message")
 async def message(request: Request):
     form_data = await request.form()
+    form_data = dict(form_data)
     logger.info(form_data)
-    credentials = f"{ACCOUNT_SID}:{AUTH_TOKEN}"
-    encoded_credentials = base64.b64encode(credentials.encode('utf-8')).decode('utf-8')
-    headers = {
-        'Authorization': f'Basic {encoded_credentials}'
-    }
-
-    write_message_to_db(form_data, "student")
 
     if 'NumMedia' in form_data and form_data['NumMedia'] != '0':
+        url = form_data["MediaUrl0"]
         if "image" in form_data['MediaContentType0']:
             extension = "jpg"
         elif "audio" in form_data['MediaContentType0']:
@@ -39,11 +28,10 @@ async def message(request: Request):
         elif "video" in form_data['MediaContentType0']:
             extension = "mp4"
         filename = form_data['SmsMessageSid'] + '.' +extension
-        
-        with open( filename, 'wb') as f:
-            response = requests.get(form_data['MediaUrl0'],headers=headers,stream=True)
-            response.raise_for_status()
-            f.write(response.content)
+
+        form_data["Body"] += f" {filename}: {url}"
+
+    write_message_to_db(form_data, "student")
 
     whatsapp = form_data['From']
     message = form_data['Body']
@@ -52,6 +40,9 @@ async def message(request: Request):
 
     write_message_to_db({'From':whatsapp, 'Body':answer}, "teacher")
 
+    # get the student number
+    to_number = whatsapp.replace("+", "").replace("whatsapp:", "")
+    send_message(to_number=to_number, body_text=answer)
+
     logger.info(answer)
     return answer
-
