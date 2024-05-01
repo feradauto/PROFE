@@ -1,1 +1,1 @@
-audio_config = {'audio':False}
+audio_config = {}
