@@ -6,6 +6,7 @@ from app.api.v1.agents.enrichment_agent import EnrichmentAgent
 from app.api.v1.helpers.vision import ImageInterpreter as II
 from app.api.v1.helpers.vision import PDFInterpreter as PI
 from app.api.v1.global_config.global_config import audio_config
+from .form_creator_tool import GoogleFormsAPITool
 
 class WizardAgentTool(BaseTool):
     name = "quiz_wizard"
@@ -18,7 +19,7 @@ class WizardAgentTool(BaseTool):
         """Use the tool."""
         debug_str = f"Running Agent with query: {query}"
         logger.debug(debug_str)
-        res="Tool not available at the moment"
+        res = GoogleFormsAPITool(credentials_file="").run(query)
         return res
 
 class EnrichmentAgentTool(BaseTool):
