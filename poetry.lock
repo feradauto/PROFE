@@ -1672,6 +1672,28 @@ url = "https://pypi.python.org/simple"
 reference = "pipy"
 
 [[package]]
+name = "google-cloud-speech"
+version = "2.26.0"
+description = "Google Cloud Speech API client library"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "google-cloud-speech-2.26.0.tar.gz", hash = "sha256:d3156a78496aeacff403429408a1b13efe996da6f0544a25567904ad801671d5"},
+    {file = "google_cloud_speech-2.26.0-py2.py3-none-any.whl", hash = "sha256:8b61aebcbcc9bd5450933c94c431584a07667e022d12834f9037bb2c0e673c87"},
+]
+
+[package.dependencies]
+google-api-core = {version = ">=1.34.1,<2.0.dev0 || >=2.11.dev0,<3.0.0dev", extras = ["grpc"]}
+google-auth = ">=2.14.1,<2.24.0 || >2.24.0,<2.25.0 || >2.25.0,<3.0.0dev"
+proto-plus = ">=1.22.3,<2.0.0dev"
+protobuf = ">=3.19.5,<3.20.0 || >3.20.0,<3.20.1 || >3.20.1,<4.21.0 || >4.21.0,<4.21.1 || >4.21.1,<4.21.2 || >4.21.2,<4.21.3 || >4.21.3,<4.21.4 || >4.21.4,<4.21.5 || >4.21.5,<5.0.0dev"
+
+[package.source]
+type = "legacy"
+url = "https://pypi.python.org/simple"
+reference = "pipy"
+
+[[package]]
 name = "google-cloud-storage"
 version = "2.16.0"
 description = "Google Cloud Storage API client library"
@@ -4512,6 +4534,34 @@ url = "https://pypi.python.org/simple"
 reference = "pipy"
 
 [[package]]
+name = "soundfile"
+version = "0.12.1"
+description = "An audio library based on libsndfile, CFFI and NumPy"
+optional = false
+python-versions = "*"
+files = [
+    {file = "soundfile-0.12.1-py2.py3-none-any.whl", hash = "sha256:828a79c2e75abab5359f780c81dccd4953c45a2c4cd4f05ba3e233ddf984b882"},
+    {file = "soundfile-0.12.1-py2.py3-none-macosx_10_9_x86_64.whl", hash = "sha256:d922be1563ce17a69582a352a86f28ed8c9f6a8bc951df63476ffc310c064bfa"},
+    {file = "soundfile-0.12.1-py2.py3-none-macosx_11_0_arm64.whl", hash = "sha256:bceaab5c4febb11ea0554566784bcf4bc2e3977b53946dda2b12804b4fe524a8"},
+    {file = "soundfile-0.12.1-py2.py3-none-manylinux_2_17_x86_64.whl", hash = "sha256:2dc3685bed7187c072a46ab4ffddd38cef7de9ae5eb05c03df2ad569cf4dacbc"},
+    {file = "soundfile-0.12.1-py2.py3-none-manylinux_2_31_x86_64.whl", hash = "sha256:074247b771a181859d2bc1f98b5ebf6d5153d2c397b86ee9e29ba602a8dfe2a6"},
+    {file = "soundfile-0.12.1-py2.py3-none-win32.whl", hash = "sha256:59dfd88c79b48f441bbf6994142a19ab1de3b9bb7c12863402c2bc621e49091a"},
+    {file = "soundfile-0.12.1-py2.py3-none-win_amd64.whl", hash = "sha256:0d86924c00b62552b650ddd28af426e3ff2d4dc2e9047dae5b3d8452e0a49a77"},
+    {file = "soundfile-0.12.1.tar.gz", hash = "sha256:e8e1017b2cf1dda767aef19d2fd9ee5ebe07e050d430f77a0a7c66ba08b8cdae"},
+]
+
+[package.dependencies]
+cffi = ">=1.0"
+
+[package.extras]
+numpy = ["numpy"]
+
+[package.source]
+type = "legacy"
+url = "https://pypi.python.org/simple"
+reference = "pipy"
+
+[[package]]
 name = "soupsieve"
 version = "2.5"
 description = "A modern CSS selector implementation for Beautiful Soup."
@@ -5560,4 +5610,4 @@ reference = "pipy"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "ef66202f6f1a8b25ade7b44ecc1b80b39f362b0d26b20799b86d83e5a9ace20b"
+content-hash = "8dd71732852b7b7fd770a6f482b781c5a8a21813b1d8c21da380b2030af48aa1"
