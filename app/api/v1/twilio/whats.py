@@ -13,11 +13,18 @@ account_sid = ACCOUNT_SID
 auth_token = AUTH_TOKEN
 client = Client(account_sid, auth_token)
 
-def send_message(to_number,body_text,from_number=TWILIO_NUMBER):
+def send_message(to_number,content,is_text=True,from_number=TWILIO_NUMBER):
   try:
-    message = client.messages.create(
+    if is_text:
+      message = client.messages.create(
+        from_=f"whatsapp:{from_number}",
+        body=content,
+        to=f"whatsapp:{to_number}"
+        )
+    else:
+      message = client.messages.create(
       from_=f"whatsapp:{from_number}",
-      body=body_text,
+      media_url=content,
       to=f"whatsapp:{to_number}"
       )
     logger.info(f"Message sent to {to_number}: {message.body}")

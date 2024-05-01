@@ -28,10 +28,10 @@ docker-delete-volumes:
 	docker volume prune -f
 
 start-ngrok:
-	ngrok http --domain=${NGROK_DOMIAN} 8080
+	ngrok http --domain=${NGROK_DOMIAN} 3001
 
 run-with-clean-db: compose-stop docker-delete-volumes compose-build compose-start
-	uvicorn app.main:app --reload --port 8080
+	uvicorn app.main:app --reload --port 3001
 
 clean:
 	@echo "Cleaning env and hooks..."
