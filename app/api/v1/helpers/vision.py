@@ -79,7 +79,7 @@ class PDFInterpreter():
 
     @classmethod
     def save_pdf_in_tmp(self, pdf_url):
-        response = requests.get(pdf_url)
+        response = requests.get(pdf_url, headers=headers, stream=True)
         if response.status_code == 200:
             with open('/tmp/pdf.pdf', 'wb') as f:
                 f.write(response.content)
