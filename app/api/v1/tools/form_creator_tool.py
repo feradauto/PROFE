@@ -253,10 +253,10 @@ class GoogleFormsAPITool():
 
 
   
-    def _call_gemini_api(self, input_payload, topic = "random academic topic", num_questions= 5):
+    def _call_gemini_api(self, input_payload = "random academic topic", num_questions= 5):
         "Calls via a single call to gemini AI"
         llm = ChatGoogleGenerativeAI(model="gemini-1.5-pro-latest", google_api_key=os.getenv("GEMINI_API_KEY", ""),)
-        result = llm.invoke(f"{PROMPT}+ Topic is : {topic} Total number of question to be generated is {num_questions}")
+        result = llm.invoke(f"{PROMPT}+ Topic is : {input_payload} Total number of question to be generated is {num_questions}")
         print(result.content)
         return result.content
 

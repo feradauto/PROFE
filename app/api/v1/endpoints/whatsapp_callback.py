@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 from app.api.v1.agents.orchestrator_agent import OrchestratorAgent
 from app.api.v1.helpers.db_manipulation import write_message_to_db
 from app.api.v1.twilio.whats import send_message
-from app.api.v1.helpers.audio import audio_response, get_and_transcribe
+from app.api.v1.helpers.audio import audio_response, get_and_transcribe, set_response_format
 
 load_dotenv()
 
@@ -22,9 +22,13 @@ async def message(request: Request):
     form_data = dict(form_data)
     logger.info(form_data)
 
-    if form_data['MessageType'] == 'audio':
-        form_data["Body"] = get_and_transcribe(form_data['MediaUrl0'])
+    whatsapp = form_data['From']
+    
+    set_response_format(audio=False, whatsapp)
 
+    if form_data['MessageType'] == 'audio':
+        form_data["Body"] = get_and_transcribe(form_data['MediaUrl0'], whatsapp)
+        
     elif  'NumMedia' in form_data and form_data['NumMedia'] != '0':
         url = form_data["MediaUrl0"]
         if "image" in form_data['MediaContentType0']:
@@ -41,7 +45,7 @@ async def message(request: Request):
 
     write_message_to_db(form_data, "student")
 
-    whatsapp = form_data['From']
+    
     message = form_data['Body']
     orchestrator=OrchestratorAgent(whatsapp=whatsapp)
     answer=orchestrator.run(message)
