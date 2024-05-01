@@ -14,7 +14,7 @@ from loguru import logger
 PROMPT = """
 
 Generate google quiz based on user question topic and number of  questions. All  question should be radio type. 
-Respect this format of structure . 
+Respect this format of structure . Generate the questions and answers in spanish .  
 
 {
   "info": {
@@ -163,9 +163,9 @@ class GoogleFormsAPITool():
         
         form_id = self.create_form(title)
         if questions:
-            self.add_questions(form_id, questions)
+            form_url = self.setup_quiz(form_id, questions)
 
-        form_url = self._convert_form_to_quiz(form_id)
+        #form_url = self._convert_form_to_quiz(form_id)
  
         return form_url
 
@@ -175,38 +175,70 @@ class GoogleFormsAPITool():
         form = self.service.forms().create(body=form_body).execute()
         return form.get('formId')
 
+
+    def setup_quiz(self, form_id, questions):
+        """
+        Setups up the Google Form as a quiz and adds questions to it.
+        """
+        # First, convert the form to a quiz
+        form_url = self._convert_form_to_quiz(form_id)
+        if not form_url:
+            print("Error converting form to a quiz. Aborting question addition.")
+            return None
+
+        # If the form has been successfully converted, proceed to add questions
+        try:
+            self.add_questions(form_id, questions)
+            print("Questions successfully added to the quiz.")
+        except Exception as e:
+            print(f"Error adding questions to the quiz: {e}")
+            return None
+
+        return form_url
+
     def add_questions(self, form_id, questions):
-        """Add questions to the specified Google Form."""
-        print(f"form ID is {form_id}, questions are : {questions}")
+        """Add questions to the specified Google Form including correct answers and grading."""
+        print(f"Form ID is {form_id}, questions are: {questions}")
         requests = []
-        for question in questions:
-            print(f"keys in question is {question.get('questionItem').keys()}")
-            # Assuming that 'choiceQuestion' structure is always correctly provided
+        for index, question in enumerate(questions):
+            options = [{"value": opt["value"]} for opt in question['questionItem']['choiceQuestion']['options']]
+            correct_answer_value = question['correctAnswer']['value']
+
+            grading = {
+                "pointValue": question.get('pointValue', 1),  # Default point value if not specified
+                "correctAnswers": {
+                    "answers": [{"value": correct_answer_value}]
+                },
+                "whenRight": {"text": "¡Correcto! Buen trabajo, sigue así."},
+                "whenWrong": {"text": "Incorrecto. ¡No te desanimes, sigue preparándote y lo conseguirás"}
+            }
+
             new_item_request = {
                 "createItem": {
                     "item": {
-                        "title": question.get('title', "Default Question"),
+                        "title": question['title'],
                         "questionItem": {
                             "question": {
                                 "required": True,
+                                "grading": grading,
                                 "choiceQuestion": {
-                                    "type": question.get('questionItem', {}).get('choiceQuestion', {}).get('type', "RADIO"),
-                                    "options": [
-                                        {"value": opt.get('value', "")} for opt in question.get('questionItem', {}).get('choiceQuestion', {}).get('options', [])
-                                    ],
-                                    "shuffle": question.get('questionItem', {}).get('choiceQuestion', {}).get('shuffle', True)
+                                    "type": "RADIO",
+                                    "options": options,
+                                    "shuffle": True
                                 }
                             }
                         }
                     },
-                    "location": {"index": questions.index(question)}
+                    "location": {
+                        "index": index
+                    }
                 }
             }
             requests.append(new_item_request)
 
         update_body = {"requests": requests}
-        logger.debug(f"update body is {update_body}")
         self.service.forms().batchUpdate(formId=form_id, body=update_body).execute()
+        print("Questions added to the form successfully with grading and feedback.")
 
 
     def _clean_json_string(self, input_string):
