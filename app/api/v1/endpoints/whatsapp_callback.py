@@ -31,6 +31,8 @@ async def message(request: Request):
             extension = "mp3"
         elif "video" in form_data['MediaContentType0']:
             extension = "mp4"
+        elif "pdf" in form_data["MediaContentType0"]:
+            extension = "pdf"
         filename = form_data['SmsMessageSid'] + '.' +extension
 
         form_data["Body"] += f" {filename}: {url}"
