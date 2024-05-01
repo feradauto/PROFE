@@ -27,6 +27,7 @@ langchainhub = "^0.1.15"
 pillow = "^10.3.0"
 langchain-google-genai = "^1.0.3"
 wikipedia = "^1.4.0"
+google-auth-oauthlib = "^1.2.0"
 
 
 [tool.poetry.group.dev.dependencies]

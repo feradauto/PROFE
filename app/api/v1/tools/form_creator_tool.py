@@ -102,7 +102,7 @@ Respect this format of structure .
 """
 
 
-class GoogleFormsAPI():
+class GoogleFormsAPITool():
     name = "google_forms"
     description = "Tool for creating and managing Google Forms."
     credentials_file = ""

@@ -3,7 +3,8 @@ from langchain.callbacks.manager import CallbackManagerForToolRun
 from loguru import logger
 from typing import Any, Optional
 from app.api.v1.agents.enrichment_agent import EnrichmentAgent
-from app.api.v1.tools import GoogleFormsAPITool
+from .form_creator_tool import GoogleFormsAPITool
+
 
 class WizardAgentTool(BaseTool):
     name = "quiz_wizard"
