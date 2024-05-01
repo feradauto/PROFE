@@ -48,7 +48,7 @@ async def message(request: Request):
 
     # get the student number
     to_number = whatsapp.replace("+", "").replace("whatsapp:", "")
-    send_message(to_number=to_number, body_text=answer)
+    send_message(to_number,answer)
 
     logger.info(answer)
 
