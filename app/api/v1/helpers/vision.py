@@ -1,5 +1,6 @@
 import base64
 import google.generativeai as genai
+from loguru import logger
 from io import BytesIO
 from pdf2image import convert_from_path
 from PIL import Image
@@ -30,10 +31,12 @@ class ImageInterpreter():
                 image = Image.open(BytesIO(response.content))
                 return image
             else:
-                print('Error loading the image. Error code:', response.status_code)
+                logger.error(
+                    "Error loading the image. Error code:", response.status_code
+                )
                 return None
         except Exception as e:
-            print('Error loading the image:', e)
+            logger.error("Error loading the image:", e)
             return None
 
     @classmethod
@@ -42,7 +45,7 @@ class ImageInterpreter():
             image = Image.open(path)
             return image
         except Exception as e:
-            print('Error loading the image:', e)
+            logger.error("Error loading the image:", e)
             return None
 
     @classmethod
@@ -74,16 +77,15 @@ class PDFInterpreter():
     def __init__(self, api_key=api_key, model="gemini-pro-vision"):
         self.vi = ImageInterpreter(api_key=api_key, model=model)
 
-    
     @classmethod
     def save_pdf_in_tmp(self, pdf_url):
-        response = requests.get(pdf_url)
+        response = requests.get(pdf_url, headers=headers, stream=True)
         if response.status_code == 200:
             with open('/tmp/pdf.pdf', 'wb') as f:
                 f.write(response.content)
             return True
         else:
-            print('Error downloading PDF:', response.status_code)
+            logger.error("Error downloading PDF:", response.status_code)
             return False
 
     @classmethod
@@ -97,5 +99,5 @@ class PDFInterpreter():
             images = convert_from_path(pdf_path)
             return images
         except Exception as e:
-            print('Error converting PDF to images:', e)
+            logger.error("Error converting PDF to images:", e)
             return None
