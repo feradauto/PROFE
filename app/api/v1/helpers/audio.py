@@ -10,7 +10,7 @@ from pydub import AudioSegment
 from app.api.v1.twilio.whats import ACCOUNT_SID, AUTH_TOKEN
 
 
-def set_response_format(audio=False, whatsapp):
+def set_response_format(audio=False, whatsapp=None):
     if whatsapp not in audio_config:
         audio_config[whatsapp]= {'audio':audio}
     else:
