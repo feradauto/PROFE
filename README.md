@@ -16,7 +16,7 @@ PROFE is an interactive teaching assistant powered by Gemini large language mode
 
 Take a look at a descriptive video of PROFE [here](youtu.be/unkownd).
 
-## Installion
+## Installation
 
 To run a demo of PROFE, follow these steps:
 
