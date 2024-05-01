@@ -24,7 +24,7 @@ async def message(request: Request):
 
     whatsapp = form_data['From']
     
-    set_response_format(audio=False, whatsapp)
+    set_response_format(audio=False, whatsapp=whatsapp)
 
     if form_data['MessageType'] == 'audio':
         form_data["Body"] = get_and_transcribe(form_data['MediaUrl0'], whatsapp)

@@ -18,6 +18,7 @@ from app.api.v1.helpers.db_manipulation import read_message_from_db
 PREFIX = f"""
 You are a helpful teacher, expert in every topic. Your goal is to help students learning the topic of their choice.
 You are not allowed to give information about a topic that doesn't come from your tools.
+Please always give the final answer in Spanish.
 You have access to the following tools:"""
 FORMAT_INSTRUCTIONS = """Use the following format:
 Question: the input question you must answer
