@@ -82,3 +82,5 @@ ignore-utils/
 *.ipynb
 
 requests.http
+
+text_speech_k.json
