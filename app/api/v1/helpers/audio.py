@@ -10,7 +10,19 @@ from pydub import AudioSegment
 from app.api.v1.twilio.whats import ACCOUNT_SID, AUTH_TOKEN
 
 
-def get_and_transcribe(speech_file):
+def set_response_format(audio=False, whatsapp):
+    if whatsapp not in audio_config:
+        audio_config[whatsapp]= {'audio':audio}
+    else:
+        audio_config[whatsapp]['audio'] = audio
+
+def get_and_transcribe(speech_file, whatsapp):
+    
+    if whatsapp not in audio_config:
+        audio_config[whatsapp]= {'audio':True}
+    else:
+        audio_config[whatsapp]['audio'] = True
+
     auth_str = ACCOUNT_SID+":"+AUTH_TOKEN
     auth_bytes = auth_str.encode('utf-8')
     auth_b64 = b64encode(auth_bytes).decode('utf-8')
