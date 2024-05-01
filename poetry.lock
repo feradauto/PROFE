@@ -3385,6 +3385,22 @@ url = "https://pypi.python.org/simple"
 reference = "pipy"
 
 [[package]]
+name = "pydub"
+version = "0.25.1"
+description = "Manipulate audio with an simple and easy high level interface"
+optional = false
+python-versions = "*"
+files = [
+    {file = "pydub-0.25.1-py2.py3-none-any.whl", hash = "sha256:65617e33033874b59d87db603aa1ed450633288aefead953b30bded59cb599a6"},
+    {file = "pydub-0.25.1.tar.gz", hash = "sha256:980a33ce9949cab2a569606b65674d748ecbca4f0796887fd6f46173a7b0d30f"},
+]
+
+[package.source]
+type = "legacy"
+url = "https://pypi.python.org/simple"
+reference = "pipy"
+
+[[package]]
 name = "pyjwt"
 version = "2.8.0"
 description = "JSON Web Token implementation in Python"
@@ -4688,4 +4704,4 @@ reference = "pipy"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "8dd71732852b7b7fd770a6f482b781c5a8a21813b1d8c21da380b2030af48aa1"
+content-hash = "273d1965ce72644dabdf0817988b346df8f2378f40ebbcfa92744180967e87ca"

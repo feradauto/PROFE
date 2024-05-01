@@ -6,6 +6,7 @@ from google.cloud import speech
 import requests
 import soundfile as sf
 from base64 import b64encode
+from pydub import AudioSegment
 from app.api.v1.twilio.whats import ACCOUNT_SID, AUTH_TOKEN
 
 
@@ -34,7 +35,7 @@ def transcribe_file(speech_file):
     audio = speech.RecognitionAudio(content=content)
     config = speech.RecognitionConfig(
         encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
-        language_code="en-US",
+        language_code="es-MX",
     )
 
     response = client.recognize(config=config, audio=audio)
@@ -66,17 +67,20 @@ def text_to_wav(whatsapp:str, voice_name: str, text: str):
 
     random_number = str(random.randint(0, 999))
 
-    filename = f"{whatsapp}_{voice_name}_{random_number}.wav"
+    filename = f"./app/static/audio/{whatsapp}_{voice_name}_{random_number}.wav"
+    filename_aac = f"./app/static/audio/{whatsapp}_{voice_name}_{random_number}.aac"
     with open(filename, "wb") as out:
         out.write(response.audio_content)
         logger.info(f'Generated speech saved to "{filename}"')
-        return filename
+    sound = AudioSegment.from_wav(filename)
+    sound.export(filename_aac, format="adts", bitrate="128k")
+    return filename_aac
         
 
 def audio_response(whatsapp, answer):
     if whatsapp in audio_config:
         if audio_config[whatsapp]['audio'] == True:
-            filename = text_to_wav(whatsapp, "en-US-Studio-O", answer)
+            filename = text_to_wav(whatsapp, "es-US-Standard-A", answer)
             logger.info(filename)
             return filename
     else:

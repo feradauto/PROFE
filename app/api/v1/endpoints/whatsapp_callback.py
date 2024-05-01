@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Request
 from loguru import logger
 import requests
-
+import os
 import requests
 from dotenv import load_dotenv
 from app.api.v1.agents.orchestrator_agent import OrchestratorAgent
@@ -10,6 +10,8 @@ from app.api.v1.twilio.whats import send_message
 from app.api.v1.helpers.audio import audio_response, get_and_transcribe
 
 load_dotenv()
+
+NGROK = os.getenv("NGROK_DOMIAN",None)
 
 router = APIRouter()
 
@@ -52,6 +54,9 @@ async def message(request: Request):
 
     logger.info(answer)
 
-    audio = audio_response(whatsapp, answer)
+    file_name = audio_response(whatsapp, answer)
+    if file_name:
+        file_url = "https://"+NGROK+"/api/v1/files/audio/"+file_name.split("/")[-1]
+        send_message(to_number,file_url,False)
 
     return answer
