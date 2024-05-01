@@ -4,6 +4,7 @@ from loguru import logger
 from typing import Any, Optional
 from app.api.v1.agents.enrichment_agent import EnrichmentAgent
 from app.api.v1.helpers.vision import ImageInterpreter as II
+from app.api.v1.global_config.global_config import audio_config
 
 class WizardAgentTool(BaseTool):
     name = "quiz_wizard"
@@ -69,3 +70,33 @@ class ImageInterpreter(BaseTool):
         result = it.query_image(query_dict["image_url"], query_dict["query"])
 
         return result
+    
+class AudioConfig(BaseTool):
+    name = "response_config"
+    description = """Useful to change the response settings and respond with audios. It receives a JSON with the key 'audio' and value True or False"""
+    whatsapp = ""
+
+    def _run(
+        self, query: dict, run_manager: Optional[CallbackManagerForToolRun] = None
+    ) -> str:
+        """Use the tool."""
+        print("Query: ", query)
+        ## scheck if it is dict
+        if type(query) is not dict:
+            query_dict = eval(query)
+        else:
+            query_dict = query
+
+        if 'audio' in query_dict:
+            if query_dict['audio'] == True:
+                if self.whatsapp not in audio_config:
+                    audio_config[self.whatsapp]= {'audio':True}
+                else:
+                    audio_config[self.whatsapp]['audio'] = True
+            else:
+                if self.whatsapp not in audio_config:
+                    audio_config[self.whatsapp]= {'audio':False}
+                else:
+                    audio_config[self.whatsapp]['audio'] = False
+
+        return "Configuration Updated"

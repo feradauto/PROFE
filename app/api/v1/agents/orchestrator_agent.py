@@ -9,6 +9,7 @@ from app.api.v1.tools.orchestrator_tools import (
     EnrichmentAgentTool,
     StudyAgentTool,
     ImageInterpreter,
+    AudioConfig,
 )
 from app.api.v1.helpers.messages import format_chat_history
 from app.api.v1.helpers.db_manipulation import read_message_from_db
@@ -56,7 +57,9 @@ class OrchestratorAgent:
         wizard = WizardAgentTool()
         study = StudyAgentTool()
         images = ImageInterpreter()
-        tools = [enrichment, wizard, study, images]
+        audio_config = AudioConfig()
+        audio_config.whatsapp = self.whatsapp
+        tools = [enrichment, wizard, study, images, audio_config]
         return tools
 
     def run(self, message):

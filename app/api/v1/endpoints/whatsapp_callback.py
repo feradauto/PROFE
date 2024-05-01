@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 from app.api.v1.agents.orchestrator_agent import OrchestratorAgent
 from app.api.v1.helpers.db_manipulation import write_message_to_db
 from app.api.v1.twilio.whats import send_message
+from app.api.v1.helpers.audio import audio_response
 
 load_dotenv()
 
@@ -45,4 +46,7 @@ async def message(request: Request):
     send_message(to_number=to_number, body_text=answer)
 
     logger.info(answer)
+
+    audio = audio_response(whatsapp, answer)
+    
     return answer
