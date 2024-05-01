@@ -7,6 +7,7 @@ from typing import Optional
 import os
 import pickle
 import json
+from loguru import logger
 
 class GoogleFormsAPI(BaseTool):
     name = "google_forms"
@@ -38,7 +39,7 @@ class GoogleFormsAPI(BaseTool):
                     creds.refresh(Request())
                 except Exception as e:
                     print("Failed to refresh token: ", e)
-                    creds = self.get_new_credentials()
+                    creds = self._get_new_credentials()
             else:
                 creds = self._get_new_credentials()
             with open(self.token_path, 'wb') as token:
@@ -62,14 +63,15 @@ class GoogleFormsAPI(BaseTool):
         """Create and update a Google Form based on the provided json formated question set."""
         print(f"Data type of payload is {type(payload)}")
         print(f"Payload is {payload}")
-        title = payload.get('title', "Default quiz title")
-        questions = payload.get('questions', [])
+        title = payload.get('info', 'test').get('title', "Default quiz title")
+        questions = payload.get('items', [])
         
         form_id = self.create_form(title)
         if questions:
             self.add_questions(form_id, questions)
-        
-        return form_id
+        form_url = f"https://docs.google.com/forms/d/e/{form_id}/viewform"
+ 
+        return form_url
 
     def create_form(self, title):
         """Create a new Google Form with a given title and return the form ID."""
@@ -82,27 +84,32 @@ class GoogleFormsAPI(BaseTool):
         print(f"form ID is {form_id}, questions are : {questions}")
         requests = []
         for question in questions:
-            new_item_request = {
-                "createItem": {
-                    "item": {
-                        "title": question['question_text'],
-                        "questionItem": {
-                            "question": {
-                                "required": True,
-                                "choiceQuestion": {
-                                    "type": "RADIO",
-                                    "options": [{"value": opt} for opt in question['options']],
-                                    "shuffle": True
+            print(f"keys in question is {question.keys()}")
+            if "options" in question.keys():
+                    
+                print(f"Question is: {question} ")
+                new_item_request = {
+                    "createItem": {
+                        "item": {
+                            "title": question.get('text', "Default Question"),
+                            "questionItem": {
+                                "question": {
+                                    "required": True,
+                                    "choiceQuestion": {
+                                        "type": question.get('question_type', "radio"),
+                                        "options": [{"value": opt.get('value', "")} for opt in question.get('options')],
+                                        "shuffle": True
+                                    }
                                 }
                             }
-                        }
-                    },
-                    "location": {"index": questions.index(question)}
+                        },
+                        "location": {"index": questions.index(question)}
+                    }
                 }
-            }
-            requests.append(new_item_request)
+                requests.append(new_item_request)
         
         update_body = {"requests": requests}
+        logger.debug(f"update body is {update_body}")
         self.service.forms().batchUpdate(formId=form_id, body=update_body).execute()
 
     def _clean_json_string(self, input_string):

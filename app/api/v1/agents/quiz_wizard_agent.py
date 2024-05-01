@@ -7,11 +7,11 @@ from app.api.v1.helpers.llm_callback import CustomCallbackHandler
 from loguru import logger
 from app.api.v1.tools.form_creator_tool import GoogleFormsAPI
 import os
-from app.api.v1.helpers.db_manipulation import read_message_from_db 
+from app.api.v1.helpers.db_manipulation import read_message_from_db
+
 
 credentials_path = os.getenv('GOOGLE_CREDENTIAL_PATH')
 credentials_file = os.path.join(credentials_path, 'credentials.json') if credentials_path else None
-
 
 PREFIX = """Generate the Google form based on the topic provided by the user use the provided tools.
 Each question in the  quiz should contain question_text, question_type, options and answer_key
@@ -31,7 +31,6 @@ Action: the action to take, should be one of [{tool_names}]
 Action Input: the input to the action is in json format with the keys that google form understands. 
 Observation: the result of the action
 
-... (this Thought/Action/Action Input/Observation can repeat N times)
 
 Thought: I now know the final answer
 
@@ -40,10 +39,10 @@ SUFFIX = """Begin!
 
 Question: {input}
 Thought:{agent_scratchpad}
-Begin!
 """
 
-                
+
+
 class QuizWizardAgent:
     def __init__(self, whatsapp):
         self.whatsapp = whatsapp
@@ -51,6 +50,7 @@ class QuizWizardAgent:
             model="gemini-1.5-pro-latest",
             google_api_key=os.getenv("GEMINI_API_KEY", ""),
             convert_system_message_to_human=True,
+            temperature=0,
             verbose=True,
             return_intermediate_steps=True,
         )
