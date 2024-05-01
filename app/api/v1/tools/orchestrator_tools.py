@@ -3,10 +3,11 @@ from langchain.callbacks.manager import CallbackManagerForToolRun
 from loguru import logger
 from typing import Any, Optional
 from app.api.v1.agents.enrichment_agent import EnrichmentAgent
+from app.api.v1.tools import GoogleFormsAPITool
 
 class WizardAgentTool(BaseTool):
     name = "quiz_wizard"
-    description = """Helps you creating a quiz"""
+    description = """Helps you creating a quiz based on a topic of choice """
     whatsapp=""
 
     def _run(
@@ -15,7 +16,7 @@ class WizardAgentTool(BaseTool):
         """Use the tool."""
         debug_str = f"Running Agent with query: {query}"
         logger.debug(debug_str)
-        res="Tool not available at the moment"
+        res = GoogleFormsAPITool(credentials_file="").run(query)
         return res
 
 class EnrichmentAgentTool(BaseTool):

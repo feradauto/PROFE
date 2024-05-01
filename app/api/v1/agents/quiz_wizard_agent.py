@@ -74,7 +74,7 @@ class QuizWizardAgent:
             },
             verbose=True,
             handle_parsing_errors=True,
-            max_iterations=2,
+            max_iterations=1,
             early_stopping_method="generate"
         )
 
