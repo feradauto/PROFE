@@ -48,7 +48,7 @@ To run a demo of PROFE, follow these steps:
    - To get this key click "ADD KEY" in the Service Account section of the Google Cloud Console and download the JSON file.
    - Make sure that the Google Service Account has access to the [Text-to-Speech API](https://console.cloud.google.com/marketplace/product/google/texttospeech.googleapis.com) and the [Speech-to-Text API](https://console.cloud.google.com/marketplace/product/google/speech.googleapis.com).
 
-   ![alt text](https://github.com/feradauto/PROFE/blob/main/google_service_account_key.png?raw=true)
+   ![alt text](https://github.com/feradauto/PROFE/blob/main/resources/google_service_account_key.png?raw=true)
 
 7. **Run PROFE API:**
    - Start the PROFE API by running the following command:
