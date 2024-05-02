@@ -84,3 +84,7 @@ ignore-utils/
 requests.http
 
 text_speech_k.json
+
+app/static/audio/*
+
+temp.*

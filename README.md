@@ -43,14 +43,25 @@ To run a demo of PROFE, follow these steps:
      make activate
      ```
 
-6. **Run PROFE API:**
+6. **Set Auth keys**
+   - Set the 'GOOGLE_APPLICATION_CREDENTIALS' key to the path of the service account key file in the .env file.
+   - To get this key click "ADD KEY" in the Service Account section of the Google Cloud Console and download the JSON file.
+   - Make sure that the Google Service Account has access to the [Text-to-Speech API](https://console.cloud.google.com/marketplace/product/google/texttospeech.googleapis.com) and the [Speech-to-Text API](https://console.cloud.google.com/marketplace/product/google/speech.googleapis.com).
+
+   ![alt text](https://github.com/feradauto/PROFE/blob/main/google_service_account_key.png?raw=true)
+
+7. **Run PROFE API:**
    - Start the PROFE API by running the following command:
      ```
      make run-with-clean-db
      ```
 
-7. **Start ngrok:**
+8. **Start ngrok:**
    - Open a new terminal window and start ngrok by running the following command:
      ```
      make start-ngrok
      ```
+
+9. **Set Up Twilio Configuration:**
+   - Copy the ngrok URL and append `/api/v1/whats/message` to it.
+   - Navigate to the Twilio console and set the URL for the WhatsApp sandbox to the ngrok URL. You can find this configuration under Messaging > Try it out > WhatsApp > Sandbox Settings.
