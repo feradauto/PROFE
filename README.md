@@ -47,6 +47,7 @@ To run a demo of PROFE, follow these steps:
    - Set the 'GOOGLE_APPLICATION_CREDENTIALS' key to the path of the service account key file in the .env file.
    - To get this key click "ADD KEY" in the Service Account section of the Google Cloud Console and download the JSON file.
    - Make sure that the Google Service Account has access to the [Text-to-Speech API](https://console.cloud.google.com/marketplace/product/google/texttospeech.googleapis.com) and the [Speech-to-Text API](https://console.cloud.google.com/marketplace/product/google/speech.googleapis.com).
+   - Specify the folder with credentials for Google Forms in the env variable GOOGLE_CREDENTIAL_PATH. You can follow the instructions [here](https://developers.google.com/forms/api/quickstart/python).
 
    ![alt text](https://github.com/feradauto/PROFE/blob/main/resources/google_service_account_key.png?raw=true)
 
