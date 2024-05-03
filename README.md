@@ -4,6 +4,8 @@
 
 PROFE is an interactive teaching assistant powered by Gemini large language models and accessible via WhatsApp. With PROFE, you can seek assistance in understanding any school-related topic. Whether it's a specific subject, concept, or even your own class notes in the form of images or PDFs, PROFE is equipped to provide insightful explanations and answer your questions.
 
+Please note that while PROFE aims for accuracy, occasional inaccuracies may occur; users are encouraged to verify information independently.
+
 ** Key features **
 
 - Versatile Assistance: PROFE can provide assistance on a wide range of topics, tailored to your individual learning needs.
@@ -14,7 +16,7 @@ PROFE is an interactive teaching assistant powered by Gemini large language mode
 
 - Customized Quizzes: PROFE can generate sample quizzes based on the topic you provide or your own class notes, helping reinforce your understanding through practice.
 
-Take a look at a descriptive video of PROFE [here](youtu.be/unkownd).
+Take a look at a descriptive video of PROFE [here](https://www.youtube.com/watch?v=tzv6KvlM1Kk&ab_channel=Ra%C3%BAlEnriqueP%C3%A9rezRioja).
 
 ## Installation
 
